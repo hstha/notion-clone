@@ -1,11 +1,21 @@
 "use client";
 
-import { ChevronsLeft, MenuIcon } from "lucide-react";
+import {
+  ChevronsLeft,
+  MenuIcon,
+  PlusCircle,
+  Search,
+  Settings,
+} from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import UserItem from "./user-item";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import Item from "./item";
+import { toast } from "sonner";
 
 const Navigation = () => {
   const pathname = usePathname();
@@ -17,6 +27,8 @@ const Navigation = () => {
 
   const [isResetting, setIsResetting] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
+
+  const create = useMutation(api.documents.create);
 
   const handleMouseMove = (event: MouseEvent) => {
     if (!isResizingRef.current) return;
@@ -79,6 +91,16 @@ const Navigation = () => {
     setTimeout(() => setIsResetting(false), 300);
   }, []);
 
+  const handleCreate = () => {
+    const promise = create({ title: "New Document" });
+
+    toast.promise(promise, {
+      loading: "Creating document...",
+      success: "Document created",
+      error: "Failed to create document",
+    });
+  };
+
   useEffect(() => {
     if (isMobile) {
       collapse();
@@ -116,6 +138,12 @@ const Navigation = () => {
 
         <div>
           <UserItem />
+
+          <Item label="Search" icon={Search} isSearch onClick={() => {}} />
+
+          <Item label="Settings" icon={Settings} onClick={() => {}} />
+
+          <Item onClick={handleCreate} label="New Document" icon={PlusCircle} />
         </div>
 
         <div className="mt-4">
