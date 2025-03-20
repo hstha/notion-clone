@@ -16,6 +16,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Item from "./item";
 import { toast } from "sonner";
+import DocumentList from "./document-list";
 
 const Navigation = () => {
   const pathname = usePathname();
@@ -147,7 +148,7 @@ const Navigation = () => {
         </div>
 
         <div className="mt-4">
-          <p>Documents</p>
+          <DocumentList />
         </div>
 
         <div

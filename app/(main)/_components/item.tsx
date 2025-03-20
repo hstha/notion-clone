@@ -1,7 +1,12 @@
+import { Button, Skeleton } from "@/components/ui";
+import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
-import { ChevronDown, ChevronRight, LucideIcon } from "lucide-react";
+import { useMutation } from "convex/react";
+import { ChevronDown, ChevronRight, LucideIcon, Plus } from "lucide-react";
 import { FC } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface ItemProps {
   id?: Id<"documents">;
@@ -16,7 +21,11 @@ interface ItemProps {
   icon: LucideIcon;
 }
 
-const Item: FC<ItemProps> = (props) => {
+interface ItemComponent extends FC<ItemProps> {
+  Skeleton: FC<{ level?: number }>;
+}
+
+const Item: ItemComponent = (props) => {
   const {
     id,
     onClick,
@@ -30,7 +39,41 @@ const Item: FC<ItemProps> = (props) => {
     onExpand,
   } = props;
 
+  const router = useRouter();
+
+  const create = useMutation(api.documents.create);
+
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;
+
+  const handleExpand = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
+    event.stopPropagation();
+    onExpand?.();
+  };
+
+  const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
+
+    if (!id) return;
+
+    const promise = create({
+      title: "Untitled",
+      parentDocument: id,
+    }).then((documentId) => {
+      if (!expanded) {
+        onExpand?.();
+      }
+
+      // router.push(`/documents/${documentId}`);
+    });
+
+    toast.promise(promise, {
+      loading: "Creating a new note...",
+      success: "New note created!",
+      error: "Failed to create a new note.",
+    });
+  };
 
   return (
     <div
@@ -45,7 +88,7 @@ const Item: FC<ItemProps> = (props) => {
       {!!id && (
         <div
           role="button"
-          onClick={() => {}}
+          onClick={handleExpand}
           className="h-full rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 mr-1"
         >
           <ChevronIcon className="h-4 w-4 shrink-0 text-muted-foreground/50" />
@@ -65,6 +108,30 @@ const Item: FC<ItemProps> = (props) => {
           <span className="text-xs">⌘</span>K
         </kbd>
       )}
+
+      {!!id && (
+        <div
+          role="button"
+          onClick={onCreate}
+          className="ml-auto flex items-center gap-x-2"
+        >
+          <div className="opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600">
+            <Plus className="h-4 w-4 text-muted-foreground" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+Item.Skeleton = ({ level }) => {
+  return (
+    <div
+      className="flex gap-x-2 py-[3px]"
+      style={{ paddingLeft: level ? `${level * 12 + 25}px` : "12px" }}
+    >
+      <Skeleton className="h-4 w-4" />
+      <Skeleton className="h-4 w-[30%]" />
     </div>
   );
 };
