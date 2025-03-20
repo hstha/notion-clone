@@ -4,12 +4,12 @@ import {
   Avatar,
   AvatarImage,
   DropdownMenu,
+  DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui";
 import { SignOutButton, useUser } from "@clerk/nextjs";
-import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu";
 import { ChevronsLeftRight } from "lucide-react";
 
 const UserItem = () => {
