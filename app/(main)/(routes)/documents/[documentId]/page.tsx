@@ -3,16 +3,31 @@
 import Toolbar from "@/components/toolbar";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { useParams } from "next/navigation";
 import Cover from "@/components/cover";
 import { Skeleton } from "@/components/ui";
+import { useMemo } from "react";
+import dynamic from "next/dynamic";
 
 const DocumentIdPage = () => {
+  const Editor = useMemo(
+    () => dynamic(() => import("@/components/editor"), { ssr: false }),
+    [],
+  );
   const params = useParams();
   const document = useQuery(api.documents.getById, {
     documentId: params.documentId as Id<"documents">,
   });
+
+  const update = useMutation(api.documents.update);
+
+  const onChange = (content: string) => {
+    update({
+      id: params.documentId as Id<"documents">,
+      content,
+    });
+  };
 
   if (document === undefined) {
     return (
@@ -41,6 +56,8 @@ const DocumentIdPage = () => {
 
       <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
         <Toolbar initialData={document} />
+
+        <Editor onChange={onChange} initialContent={document.content} />
       </div>
     </div>
   );

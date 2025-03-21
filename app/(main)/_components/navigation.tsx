@@ -23,10 +23,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui";
 import TrashBox from "./trash-box";
 import { getOnOpen, getSettingsOnOpen, useSearch, useSettings } from "@/hooks";
 import Navbar from "./navbar";
+import { useRouter } from "next/navigation";
+
 const Navigation = () => {
   const params = useParams();
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const router = useRouter();
 
   const onSettingOpen = useSettings(getSettingsOnOpen);
   const onSearchOpen = useSearch(getOnOpen);
@@ -102,7 +105,9 @@ const Navigation = () => {
   }, []);
 
   const handleCreate = () => {
-    const promise = create({ title: "New Document" });
+    const promise = create({ title: "New Document" }).then((documentId) =>
+      router.push(`/documents/${documentId}`),
+    );
 
     toast.promise(promise, {
       loading: "Creating document...",
