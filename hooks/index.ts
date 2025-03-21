@@ -18,3 +18,4 @@ export {
   getCoverImageOnOpen,
   getCoverImageOnClose,
 } from "./use-cover-image";
+export { default as useOrigin } from "./use-origin";
