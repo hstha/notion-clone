@@ -21,11 +21,13 @@ import { toast } from "sonner";
 import DocumentList from "./document-list";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui";
 import TrashBox from "./trash-box";
-import { getOnOpen, useSearch } from "@/hooks";
+import { getOnOpen, getSettingsOnOpen, useSearch, useSettings } from "@/hooks";
 const Navigation = () => {
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const onOpen = useSearch(getOnOpen);
+
+  const onSettingOpen = useSettings(getSettingsOnOpen);
+  const onSearchOpen = useSearch(getOnOpen);
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -145,9 +147,9 @@ const Navigation = () => {
         <div>
           <UserItem />
 
-          <Item label="Search" icon={Search} isSearch onClick={onOpen} />
+          <Item label="Search" icon={Search} isSearch onClick={onSearchOpen} />
 
-          <Item label="Settings" icon={Settings} onClick={() => {}} />
+          <Item label="Settings" icon={Settings} onClick={onSettingOpen} />
 
           <Item onClick={handleCreate} label="New Page" icon={PlusCircle} />
         </div>

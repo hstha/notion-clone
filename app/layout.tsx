@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ConvexProvider, ThemeProvider } from "@/components/providers";
+import {
+  ConvexProvider,
+  ModalProvider,
+  ThemeProvider,
+} from "@/components/providers";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -52,6 +56,7 @@ export default function RootLayout({
             storageKey="jotion-theme"
           >
             <Toaster position="bottom-center" />
+            <ModalProvider />
 
             {children}
           </ThemeProvider>

@@ -6,3 +6,9 @@ export {
   getOnOpen,
   getOnClose,
 } from "./use-search";
+export {
+  default as useSettings,
+  getIsOpen as getSettingsIsOpen,
+  getOnOpen as getSettingsOnOpen,
+  getOnClose as getSettingsOnClose,
+} from "./use-settings";
