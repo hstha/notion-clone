@@ -12,3 +12,9 @@ export {
   getOnOpen as getSettingsOnOpen,
   getOnClose as getSettingsOnClose,
 } from "./use-settings";
+export {
+  default as useCoverImage,
+  getCoverImageIsOpen,
+  getCoverImageOnOpen,
+  getCoverImageOnClose,
+} from "./use-cover-image";
